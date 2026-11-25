@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172725">
+    <title>{{ page_title }} — Окна Осетии</title>
+    <link rel="stylesheet" href="{% static 'core/home.css' %}">
+</head>
+<body class="account-body">
+    <header class="site-header account-header">
+        <a class="brand" href="{% url 'home' %}">
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <a class="header-link" href="{% url 'home' %}"><span>На главную</span></a>
+    </header>
+    <main class="account-page">
+        <section class="account-card" aria-labelledby="account-title">
+            <p class="eyebrow eyebrow--dark"><span></span> Окна Осетии</p>
+            <h1 id="account-title">{{ page_title }}</h1>
+            <p class="account-intro">Войдите или создайте аккаунт, чтобы сохранять данные профиля.</p>
+
+            {% if form.non_field_errors %}
+                <div class="account-errors" role="alert">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <form class="account-form" method="post" {% if is_registration %}enctype="multipart/form-data"{% endif %}>
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                {% for field in form %}
+                    <label class="account-field" for="{{ field.id_for_label }}">
+                        <span>{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.help_text %}<div class="account-field__help">{{ field.help_text|safe }}</div>{% endif %}
+                        {% for error in field.errors %}<small class="account-field__error">{{ error }}</small>{% endfor %}
+                    </label>
+                {% endfor %}
+                {% if is_registration %}
+                    <datalist id="region-options">
+                        {% for region in regions %}<option value="{{ region }}">{% endfor %}
+                    </datalist>
+                {% endif %}
+                <button class="account-submit" type="submit">{{ submit_label }} <span aria-hidden="true">↗</span></button>
+            </form>
+            <a class="account-alternate" href="{% url alternate_url %}{% if next %}?next={{ next|urlencode }}{% endif %}">{{ alternate_label }}</a>
+        </section>
+    </main>
+</body>
+</html>

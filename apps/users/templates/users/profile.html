@@ -1,0 +1,99 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172725">
+    <title>Личный кабинет — Окна Осетии</title>
+    <link rel="stylesheet" href="{% static 'core/home.css' %}">
+</head>
+<body class="account-body">
+    <header class="site-header account-header">
+        <a class="brand" href="{% url 'home' %}">
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <form method="post" action="{% url 'user_logout' %}">
+            {% csrf_token %}
+            <button class="account-header__button" type="submit">Выйти</button>
+        </form>
+    </header>
+    <main class="account-page">
+        <section class="account-card" aria-labelledby="account-title">
+            <p class="eyebrow eyebrow--dark"><span></span> Личный кабинет</p>
+            <h1 id="account-title">Ваш профиль</h1>
+            {% if messages %}
+                {% for message in messages %}<p class="account-message">{{ message }}</p>{% endfor %}
+            {% endif %}
+            {% if profile.avatar %}
+                <img class="profile-avatar" src="{{ profile.avatar.url }}" alt="Аватар пользователя">
+            {% endif %}
+            <p class="account-intro">Логин: <strong>{{ request.user.username }}</strong></p>
+            <form class="account-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="profile">
+                {% for field in form %}
+                    <label class="account-field" for="{{ field.id_for_label }}">
+                        <span>{{ field.label }}</span>
+                        {{ field }}
+                        {% for error in field.errors %}<small class="account-field__error">{{ error }}</small>{% endfor %}
+                    </label>
+                {% endfor %}
+                <datalist id="region-options">
+                    {% for region in regions %}<option value="{{ region }}">{% endfor %}
+                </datalist>
+                <button class="account-submit" type="submit">Сохранить профиль <span aria-hidden="true">↗</span></button>
+            </form>
+            <a class="account-alternate" href="{% url 'home' %}">Вернуться на главную</a>
+        </section>
+
+        <section class="orders-card" id="orders" aria-labelledby="orders-title">
+            <p class="eyebrow eyebrow--dark"><span></span> Личный кабинет</p>
+            <h2 id="orders-title">Мои заявки</h2>
+            <p class="orders-card__intro">Отправьте параметры окна менеджеру. Он свяжется с вами для уточнения деталей и подтверждения стоимости.</p>
+
+            {% if orders %}
+                <div class="orders-list">
+                    {% for order in orders %}
+                        <article class="order-item">
+                            <div class="order-item__heading">
+                                <h3>Заявка №{{ order.pk }}</h3>
+                                <span class="order-status order-status--{{ order.status }}">{{ order.get_status_display }}</span>
+                            </div>
+                            <p>{{ order.material.name }} · {{ order.width }} × {{ order.height }} мм · {{ order.quantity }} шт.</p>
+                            <p class="order-item__price">{{ order.total_price }} {{ order.material.rub }}</p>
+                            <p class="order-item__contact">{{ order.phone }} · {{ order.address }}</p>
+                            {% if order.comment %}<p class="order-item__comment">{{ order.comment }}</p>{% endif %}
+                            <time datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|date:"d.m.Y H:i" }}</time>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="orders-empty">Здесь появятся ваши заявки после оформления.</p>
+            {% endif %}
+
+            <div class="order-form-card">
+                <h3>Новая заявка</h3>
+                <form class="order-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="order">
+                    {% if order_form.non_field_errors %}
+                        <div class="review-errors" role="alert">{{ order_form.non_field_errors }}</div>
+                    {% endif %}
+                    {% for field in order_form %}
+                        <label class="review-field" for="{{ field.id_for_label }}">
+                            <span>{{ field.label }}</span>
+                            {{ field }}
+                            {% for error in field.errors %}<small class="review-field__error">{{ error }}</small>{% endfor %}
+                        </label>
+                    {% endfor %}
+                    <button class="account-submit" type="submit">
+                        Отправить менеджеру <span aria-hidden="true">↗</span>
+                    </button>
+                    <p class="review-form__note">Это заявка на консультацию, а не онлайн-оплата. Менеджер подтвердит заказ отдельно.</p>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

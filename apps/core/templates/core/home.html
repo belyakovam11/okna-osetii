@@ -1,0 +1,248 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172725">
+    <meta name="description" content="Окна Осетии — тепло горного дома и вид, который хочется сохранить.">
+    <title>Окна Осетии — тепло, которое открывает вид</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/home.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="#home" aria-label="Окна Осетии — на главную">
+            <span class="brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M4 26V9.5L12 4v22M12 26V9.5L20 4v22M4 17h16" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M21 26 27 14l5 12M23.5 21h6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </span>
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Основная навигация">
+            <a href="#about">О компании</a>
+            <a href="#advantages">Преимущества</a>
+            <a href="#calculator">Расчёт</a>
+            <a href="{% url 'reviews_and_works' %}">Отзывы и работы</a>
+        </nav>
+        <a class="header-link" href="{% if user.is_authenticated %}{% url 'user_profile' %}{% else %}{% url 'user_login' %}{% endif %}">
+            <span>{% if user.is_authenticated %}Личный кабинет{% else %}Войти{% endif %}</span>
+            <span class="header-link__arrow" aria-hidden="true">↗</span>
+        </a>
+    </header>
+
+    <main>
+        <section class="hero" id="home" aria-labelledby="hero-title">
+            <div class="hero__landscape" aria-hidden="true">
+                {% if appearance and appearance.background_image %}
+                    <img class="hero__background-image" src="{{ appearance.background_image.url }}" alt="">
+                {% else %}
+                <svg class="mountains" viewBox="0 0 1600 950" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#98b9b1"/>
+                            <stop offset=".48" stop-color="#d5c6a9"/>
+                            <stop offset="1" stop-color="#e4b98e"/>
+                        </linearGradient>
+                        <linearGradient id="ridge" x1="0" y1="0" x2=".8" y2="1">
+                            <stop stop-color="#71867c"/>
+                            <stop offset="1" stop-color="#243b36"/>
+                        </linearGradient>
+                        <linearGradient id="valley" x1="0" y1="0" x2="0" y2="1">
+                            <stop stop-color="#667d69"/>
+                            <stop offset="1" stop-color="#172c29"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="1600" height="950" fill="url(#sky)"/>
+                    <circle cx="1195" cy="265" r="115" fill="#f3d9ae" opacity=".58"/>
+                    <path d="m0 600 190-181 130 106 244-300 102 131 209-219 186 271 117-102 240 211 182-106v539H0Z" fill="#b3b7a5" opacity=".63"/>
+                    <path d="m0 685 208-185 128 115 207-234 118 163 218-312 167 250 129-134 178 215 137-111 230 191v307H0Z" fill="url(#ridge)"/>
+                    <path d="m414 454 129-73-9 47 28-16-30 52-28-18-32 19Zm449-222 67 104-50-19 9 31-37-29 12-36Zm331 116 71 106-53-33 9 35-33-30 8-32Z" fill="#e1e2d6" opacity=".74"/>
+                    <path d="m0 752 214-126 145 65 176-124 179 143 188-161 192 137 171-87 335 138v213H0Z" fill="#314d43" opacity=".85"/>
+                    <path d="m0 828 209-94 153 85 228-120 173 119 247-104 207 94 174-55 209 61v136H0Z" fill="url(#valley)"/>
+                    <path d="M0 891c205-51 355 24 548-14 208-41 333-6 497 8 179 15 369-43 555-6v71H0Z" fill="#182e2a"/>
+                </svg>
+                {% endif %}
+                <div class="hero__shade"></div>
+            </div>
+
+            <div class="window" aria-hidden="true">
+                <div class="window__outer-frame"></div>
+                <div class="window__sash window__sash--left">
+                    <div class="window__shutter">
+                        <span class="window__ornament"></span>
+                        <div class="window__glass"></div>
+                        <div class="window__glass"></div>
+                    </div>
+                </div>
+                <div class="window__sash window__sash--right">
+                    <div class="window__shutter">
+                        <span class="window__ornament"></span>
+                        <div class="window__glass"></div>
+                        <div class="window__glass"></div>
+                    </div>
+                </div>
+                <div class="window__center-bar"></div>
+            </div>
+
+            <div class="hero__content">
+                <p class="eyebrow"><span></span> Создано для жизни в горах</p>
+                <h1 id="hero-title">Окна<br><em>Осетии</em></h1>
+                <p class="hero__description">Сохраняем тепло дома.<br>Открываем красоту за окном.</p>
+                <a class="hero__cta" href="#calculator">
+                    <span>Рассчитать стоимость</span>
+                    <span class="hero__cta-icon" aria-hidden="true">↘</span>
+                </a>
+            </div>
+
+            <div class="hero__bottom">
+                <span>Северная Осетия — Алания</span>
+                <span class="hero__scroll"><span></span> Листайте вниз</span>
+                <span class="hero__index">01 <i></i> 03</span>
+            </div>
+            <div class="hero__grain" aria-hidden="true"></div>
+        </section>
+
+        <section class="about" id="about">
+            <p class="eyebrow eyebrow--dark"><span></span> Наш подход</p>
+            <div class="about__grid">
+                <h2>Дом, в котором<br>тепло <em>по-настоящему.</em></h2>
+                <p>Горы учат ценить надёжность. Мы создаём окна, которые защищают от холода и шума, чтобы дома оставалось главное — уют, свет и близкие люди.</p>
+            </div>
+        </section>
+
+        <section class="advantages" id="advantages">
+            <div class="advantages__heading">
+                <p class="eyebrow eyebrow--dark"><span></span> В каждом окне</p>
+                <h2>Продумано для<br><em>вашего дома</em></h2>
+            </div>
+            <div class="advantage-list">
+                <article class="advantage">
+                    <span class="advantage__number">01</span>
+                    <div>
+                        <h3>Тепло в любую погоду</h3>
+                        <p>Надёжная защита от осетинских зим и сквозняков.</p>
+                    </div>
+                    <span class="advantage__icon" aria-hidden="true">↗</span>
+                </article>
+                <article class="advantage">
+                    <span class="advantage__number">02</span>
+                    <div>
+                        <h3>Тишина и спокойствие</h3>
+                        <p>Помогаем оставить городской шум за пределами дома.</p>
+                    </div>
+                    <span class="advantage__icon" aria-hidden="true">↗</span>
+                </article>
+                <article class="advantage">
+                    <span class="advantage__number">03</span>
+                    <div>
+                        <h3>Красивый вид каждый день</h3>
+                        <p>Больше света и ничего лишнего между вами и горами.</p>
+                    </div>
+                    <span class="advantage__icon" aria-hidden="true">↗</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="calculator" id="calculator" aria-labelledby="calculator-title">
+            <div class="calculator__intro">
+                <p class="eyebrow eyebrow--dark"><span></span> Расчёт стоимости</p>
+                <h2 id="calculator-title">Ваше окно —<br><em>ваш размер.</em></h2>
+                <p class="calculator__description">Укажите размеры и выберите материал — покажем ориентировочную стоимость.</p>
+                <p class="calculator__note">Цены демонстрационные. Точный расчёт зависит от комплектации и замера.</p>
+            </div>
+
+            <div class="calculator__panel">
+                <form
+                    class="calculator-form"
+                    id="window-calculator"
+                    action="{% url 'calculate_window_price' %}"
+                    method="post"
+                    data-profile-url="{% url 'user_profile' %}"
+                    data-login-url="{% url 'user_login' %}"
+                    data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+                >
+                    {% csrf_token %}
+                    <label class="calculator-field calculator-field--material">
+                        <span>Материал профиля</span>
+                        <select name="material" required>
+                            {% for material in materials %}
+                                <option
+                                    value="{{ material.pk }}"
+                                    data-material-name="{{ material.name }}"
+                                    data-material-slug="{{ material.slug }}"
+                                    data-image="{% if material.image %}{{ material.image.url }}{% endif %}"
+                                >
+                                    {{ material.name }} — {{ material.price }} ₽/м²
+                                </option>
+                            {% empty %}
+                                <option value="" disabled selected>Материалы пока не добавлены</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <div class="calculator-form__dimensions">
+                        <label class="calculator-field">
+                            <span>Ширина, мм</span>
+                            <input name="width" type="number" min="100" max="6000" value="1200" required>
+                        </label>
+                        <span class="calculator-form__multiply" aria-hidden="true">×</span>
+                        <label class="calculator-field">
+                            <span>Высота, мм</span>
+                            <input name="height" type="number" min="100" max="6000" value="1400" required>
+                        </label>
+                    </div>
+                    <label class="calculator-field calculator-field--quantity">
+                        <span>Количество окон</span>
+                        <input name="quantity" type="number" min="1" max="50" value="1" required>
+                    </label>
+                    <button class="calculator-submit" type="submit" {% if not materials %}disabled{% endif %}>
+                        Рассчитать стоимость <span aria-hidden="true">↗</span>
+                    </button>
+                    <p class="calculator-error" id="calculator-error" role="alert" hidden></p>
+                    <div class="calculator-result" id="calculator-result" aria-live="polite" hidden>
+                        <p class="calculator-result__label">Предварительная стоимость</p>
+                        <p class="calculator-result__price" id="calculator-price"></p>
+                        <p class="calculator-result__details" id="calculator-details"></p>
+                        <a class="calculator-order" id="calculator-order" href="{% url 'user_profile' %}#orders">
+                            Оформить заявку в личном кабинете <span aria-hidden="true">↗</span>
+                        </a>
+                    </div>
+                </form>
+
+                <div class="calculator-preview">
+                    <p class="calculator-preview__label" id="calculator-preview-label">Вид окна</p>
+                    <button class="window-preview" id="window-preview" type="button" aria-label="Оконная рама. Дважды нажмите, чтобы увеличить изображение." aria-pressed="false">
+                        <img class="window-preview__image" id="material-preview-image" alt="" hidden>
+                        <span class="window-preview__frame">
+                            <span class="window-preview__glass"></span>
+                            <span class="window-preview__glass"></span>
+                            <span class="window-preview__glass"></span>
+                            <span class="window-preview__glass"></span>
+                        </span>
+                    </button>
+                    <p class="calculator-preview__hint">Дважды нажмите или коснитесь окна, чтобы приблизить</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <a class="brand brand--footer" href="#home">
+            <span class="brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M4 26V9.5L12 4v22M12 26V9.5L20 4v22M4 17h16" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M21 26 27 14l5 12M23.5 21h6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </span>
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <span>Северная Осетия — Алания</span>
+        <a class="site-footer__top" href="{% url 'reviews_and_works' %}">Отзывы и работы ↗</a>
+        <a class="site-footer__top" href="#home">Наверх ↑</a>
+    </footer>
+    <script src="{% static 'core/home.js' %}" defer></script>
+</body>
+</html>

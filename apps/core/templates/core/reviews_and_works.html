@@ -1,0 +1,139 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172725">
+    <meta name="description" content="Реальные проекты и отзывы клиентов «Окна Осетии».">
+    <title>Отзывы и готовые работы — Окна Осетии</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/home.css' %}">
+</head>
+<body class="showcase-body">
+    <header class="site-header showcase-header">
+        <a class="brand" href="{% url 'home' %}" aria-label="Окна Осетии — на главную">
+            <span class="brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M4 26V9.5L12 4v22M12 26V9.5L20 4v22M4 17h16" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M21 26 27 14l5 12M23.5 21h6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </span>
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Основная навигация">
+            <a href="{% url 'home' %}#about">О компании</a>
+            <a href="{% url 'home' %}#calculator">Расчёт</a>
+            <a href="#works">Наши работы</a>
+            <a href="#reviews">Отзывы</a>
+        </nav>
+        <a class="header-link" href="{% url 'home' %}">
+            <span>На главную</span>
+            <span class="header-link__arrow" aria-hidden="true">↗</span>
+        </a>
+    </header>
+
+    <main>
+        <section class="showcase-hero">
+            <p class="eyebrow"><span></span> Опыт, которому доверяют</p>
+            <h1>Работы и <em>отзывы</em></h1>
+            <p>Посмотрите, как окна Осетии становятся частью домов, и поделитесь своим впечатлением.</p>
+            <a class="hero__cta" href="#works">
+                <span>Смотреть проекты</span>
+                <span class="hero__cta-icon" aria-hidden="true">↘</span>
+            </a>
+        </section>
+
+        <section class="showcase-section" id="works">
+            <div class="showcase-section__heading">
+                <p class="eyebrow eyebrow--dark"><span></span> Завершённые проекты</p>
+                <h2>Готовые <em>работы</em></h2>
+                <p>Каждый проект — решение, подобранное под дом и его характер.</p>
+            </div>
+            <div class="work-grid">
+                {% for work in works %}
+                    <article class="work-card">
+                        <img src="{{ work.image.url }}" alt="{{ work.title }}" loading="lazy">
+                        <div class="work-card__content">
+                            {% if work.location %}<p class="work-card__location">{{ work.location }}</p>{% endif %}
+                            <h3>{{ work.title }}</h3>
+                            <p>{{ work.description }}</p>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="showcase-empty">Готовые проекты скоро появятся. Загляните позже.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="showcase-section showcase-section--reviews" id="reviews">
+            <div class="showcase-section__heading">
+                <p class="eyebrow eyebrow--dark"><span></span> Мнения клиентов</p>
+                <h2>Слова, которые <em>важны</em></h2>
+                <p>Новые отзывы появляются после проверки, чтобы сохранить на странице только реальные истории.</p>
+            </div>
+            <div class="review-layout">
+                <div class="review-list">
+                    {% for review in reviews %}
+                        <article class="review-card">
+                            <div class="review-card__rating" aria-label="Оценка: {{ review.rating }} из 5">
+                                {% for star in "12345" %}
+                                    <span{% if forloop.counter <= review.rating %} class="is-active"{% endif %} aria-hidden="true">★</span>
+                                {% endfor %}
+                            </div>
+                            <blockquote>{{ review.text }}</blockquote>
+                            <p class="review-card__author">{{ review.author_name }}</p>
+                        </article>
+                    {% empty %}
+                        <p class="showcase-empty">Пока опубликованных отзывов нет. Будем рады вашему отзыву.</p>
+                    {% endfor %}
+                </div>
+
+                <section class="review-form-card" aria-labelledby="review-form-title">
+                    <p class="eyebrow eyebrow--dark"><span></span> Поделитесь впечатлением</p>
+                    <h3 id="review-form-title">Оставить отзыв</h3>
+                    {% if messages %}
+                        {% for message in messages %}<p class="review-success" role="status">{{ message }}</p>{% endfor %}
+                    {% endif %}
+                    {% if review_form.non_field_errors %}
+                        <div class="review-errors" role="alert">{{ review_form.non_field_errors }}</div>
+                    {% endif %}
+                    <form class="review-form" method="post">
+                        {% csrf_token %}
+                        {{ review_form.website }}
+                        {% for field in review_form %}
+                            {% if field.name != "website" %}
+                                <label class="review-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% for error in field.errors %}<small class="review-field__error">{{ error }}</small>{% endfor %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                        <button class="account-submit" type="submit">
+                            Отправить на проверку <span aria-hidden="true">↗</span>
+                        </button>
+                        <p class="review-form__note">Отзыв будет опубликован после проверки модератором.</p>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand brand--footer" href="{% url 'home' %}">
+            <span class="brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M4 26V9.5L12 4v22M12 26V9.5L20 4v22M4 17h16" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M21 26 27 14l5 12M23.5 21h6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </span>
+            <span class="brand__name">ОКНА <span>ОСЕТИИ</span></span>
+        </a>
+        <span>Северная Осетия — Алания</span>
+        <a class="site-footer__top" href="{% url 'home' %}">На главную ↑</a>
+    </footer>
+</body>
+</html>
